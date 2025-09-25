@@ -1,0 +1,338 @@
+# step 1: Load dataset
+First 5 rows of dataset:
+       ID  Gender Ever_Married  Age Graduated  Profession  Work_Experience  \
+0  458989  Female          Yes   36       Yes    Engineer              0.0   
+1  458994    Male          Yes   37       Yes  Healthcare              8.0   
+2  458996  Female          Yes   69        No         NaN              0.0   
+3  459000    Male          Yes   59        No   Executive             11.0   
+4  459001  Female           No   19        No   Marketing              NaN   
+
+  Spending_Score  Family_Size  Var_1  
+0            Low          1.0  Cat_6  
+1        Average          4.0  Cat_6  
+2            Low          1.0  Cat_6  
+3           High          2.0  Cat_6  
+4            Low          4.0  Cat_6  
+
+# 1.21 data preprocessing
+
+Missing values before handling:
+ID                   0
+Gender               0
+Ever_Married        50
+Age                  0
+Graduated           24
+Profession          38
+Work_Experience    269
+Spending_Score       0
+Family_Size        113
+Var_1               32
+dtype: int64
+# adding missing and null values
+
+Missing values after handling:
+ID                 0
+Gender             0
+Ever_Married       0
+Age                0
+Graduated          0
+Profession         0
+Work_Experience    0
+Spending_Score     0
+Family_Size        0
+Var_1              0
+dtype: int64
+/tmp/ipython-input-2945379417.py:3: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  df[col].fillna(df[col].mode()[0], inplace=True)
+/tmp/ipython-input-2945379417.py:3: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  df[col].fillna(df[col].mode()[0], inplace=True)
+/tmp/ipython-input-2945379417.py:3: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  df[col].fillna(df[col].mode()[0], inplace=True)
+/tmp/ipython-input-2945379417.py:7: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  df[col].fillna(df[col].median(), inplace=True)
+# After encoding
+
+Data after encoding categorical variables:
+       ID  Gender  Ever_Married  Age  Graduated  Profession  Work_Experience  \
+0  458989       0             1   36          1           2              0.0   
+1  458994       1             1   37          1           5              8.0   
+2  458996       0             1   69          0           0              0.0   
+3  459000       1             1   59          0           4             11.0   
+4  459001       0             0   19          0           8              1.0   
+
+   Spending_Score  Family_Size  Var_1  
+0             NaN          1.0      5  
+1             NaN          4.0      5  
+2             NaN          1.0      5  
+3             NaN          2.0      5  
+4             NaN          4.0      5  
+
+Selected features for clustering:
+   Age  Work_Experience  Family_Size  Gender  Ever_Married  Graduated  \
+0   36              0.0          1.0       0             1          1   
+1   37              8.0          4.0       1             1          1   
+2   69              0.0          1.0       0             1          0   
+3   59             11.0          2.0       1             1          0   
+4   19              1.0          4.0       0             0          0   
+
+   Profession  Spending_Score  
+0           2             NaN  
+1           5             NaN  
+2           0             NaN  
+3           4             NaN  
+4           8             NaN  
+
+Data types of features:
+Age                  int64
+Work_Experience    float64
+Family_Size        float64
+Gender               int64
+Ever_Married         int64
+Graduated            int64
+Profession           int64
+Spending_Score     float64
+dtype: object
+
+
+# checking na values and infinite values
+
+Any NaN values left? 0
+Any infinite values? 0
+
+
+#1.4 Normalize numerical variables 
+
+Scaled dataset preview:
+        Age  Work_Experience  Family_Size  Gender  Ever_Married  Graduated  \
+0 -0.450948        -0.748105    -1.172097     0.0           1.0        1.0   
+1 -0.391999         1.752242     0.792450     1.0           1.0        1.0   
+2  1.494372        -0.748105    -1.172097     0.0           1.0        0.0   
+3  0.904881         2.689872    -0.517248     1.0           1.0        0.0   
+4 -1.453083        -0.435562     0.792450     0.0           0.0        0.0   
+
+   Profession  Spending_Score  
+0         2.0             0.0  
+1         5.0             0.0  
+2         0.0             0.0  
+3         4.0             0.0  
+4         8.0             0.0  
+
+
+# Step 3: Feature Selection of Demographic, Professional, Behavioral
+
+
+Selected Features for Clustering:
+   Age  Gender  Family_Size  Ever_Married  Profession  Work_Experience  \
+0   36       0          1.0             1           2              0.0   
+1   37       1          4.0             1           5              8.0   
+2   69       0          1.0             1           0              0.0   
+3   59       1          2.0             1           4             11.0   
+4   19       0          4.0             0           8              1.0   
+
+   Graduated  Spending_Score  
+0          1             0.0  
+1          1             0.0  
+2          0             0.0  
+3          0             0.0  
+4          0             0.0  
+
+
+# Step 4: Clustering Techniques
+
+
+✅ Clustering Done! Added 4 cluster labels to DataFrame.
+   KMeans_Cluster  Hierarchical_Cluster  DBSCAN_Cluster  GMM_Cluster
+0               3                     2               0            3
+1               2                     3               0            3
+2               0                     0               0            0
+3               3                     2               0            3
+4               2                     1               0            1
+
+
+# Step 5: Cluster Evaluation
+
+
+ Cluster Evaluation Metrics:
+
+K-Means Clustering:
+Silhouette Score         : 0.3054 (higher is better)
+Davies–Bouldin Index     : 1.2773 (lower is better)
+Calinski-Harabasz Index  : 1724.2023 (higher is better)
+
+Hierarchical Clustering:
+Silhouette Score         : 0.2764 (higher is better)
+Davies–Bouldin Index     : 1.3409 (lower is better)
+Calinski-Harabasz Index  : 1609.7328 (higher is better)
+
+DBSCAN Clustering:
+Silhouette Score         : 0.2739 (higher is better)
+Davies–Bouldin Index     : 2.0743 (lower is better)
+Calinski-Harabasz Index  : 19.1029 (higher is better)
+
+GMM Clustering:
+Silhouette Score         : 0.2536 (higher is better)
+Davies–Bouldin Index     : 1.2951 (lower is better)
+Calinski-Harabasz Index  : 1480.7452 (higher is better)
+
+
+#Step 6: Results & Insights
+
+ Cluster Profiles (KMeans):
+                           ID    Gender  Ever_Married        Age  Graduated  \
+KMeans_Cluster                                                                
+0               463384.098891  0.514787      0.651571  44.371534   0.813309   
+1               463210.568389  0.477204      0.829787  65.759878   0.565350   
+2               463484.069549  0.565789      0.193609  27.201128   0.328947   
+3               463581.152047  0.597953      0.714912  44.666667   0.562865   
+
+                Profession  Work_Experience  Spending_Score  Family_Size  \
+KMeans_Cluster                                                             
+0                 0.223660         2.435305             0.0     2.546211   
+1                 7.179331         1.665653             0.0     2.103343   
+2                 5.206767         2.780075             0.0     3.642857   
+3                 2.871345         2.377193             0.0     2.842105   
+
+                   Var_1  Hierarchical_Cluster  DBSCAN_Cluster  GMM_Cluster  
+KMeans_Cluster                                                               
+0               4.271719              0.138632       -0.007394     0.670980  
+1               4.382979              1.136778       -0.012158     1.115502  
+2               3.904135              2.881579       -0.009398     2.097744  
+3               4.076023              1.909357       -0.002924     3.000000  
+
+
+# Ex plaination of above output
+#From this, you can label clusters like:
+#Cluster 0: Young Professionals with Low Spending
+#Cluster 1: Large Families with Average Spending
+#Cluster 2: Middle-aged Adults with Medium Spending
+#Cluster 3: Experienced Executives with High Spending
+
+#6.2 Business Strategies for Each Group
+
+
+ Insights for KMeans_Cluster:
+                           ID    Gender  Ever_Married        Age  Graduated  \
+KMeans_Cluster                                                                
+0               463384.098891  0.514787      0.651571  44.371534   0.813309   
+1               463210.568389  0.477204      0.829787  65.759878   0.565350   
+2               463484.069549  0.565789      0.193609  27.201128   0.328947   
+3               463581.152047  0.597953      0.714912  44.666667   0.562865   
+
+                Profession  Work_Experience  Spending_Score  Family_Size  \
+KMeans_Cluster                                                             
+0                 0.223660         2.435305             0.0     2.546211   
+1                 7.179331         1.665653             0.0     2.103343   
+2                 5.206767         2.780075             0.0     3.642857   
+3                 2.871345         2.377193             0.0     2.842105   
+
+                   Var_1  Hierarchical_Cluster  DBSCAN_Cluster  GMM_Cluster  
+KMeans_Cluster                                                               
+0               4.271719              0.138632       -0.007394     0.670980  
+1               4.382979              1.136778       -0.012158     1.115502  
+2               3.904135              2.881579       -0.009398     2.097744  
+3               4.076023              1.909357       -0.002924     3.000000  
+
+Cluster 0:
+Average Profile: {'ID': 463384.0988909427, 'Gender': 0.5147874306839186, 'Ever_Married': 0.6515711645101664, 'Age': 44.37153419593346, 'Graduated': 0.8133086876155268, 'Profession': 0.22365988909426987, 'Work_Experience': 2.4353049907578557, 'Spending_Score': 0.0, 'Family_Size': 2.5462107208872458, 'Var_1': 4.271719038817006, 'Hierarchical_Cluster': 0.13863216266173753, 'DBSCAN_Cluster': -0.0073937153419593345, 'GMM_Cluster': 0.6709796672828097}
+
+Cluster 1:
+Average Profile: {'ID': 463210.56838905776, 'Gender': 0.47720364741641336, 'Ever_Married': 0.8297872340425532, 'Age': 65.75987841945289, 'Graduated': 0.5653495440729484, 'Profession': 7.179331306990881, 'Work_Experience': 1.6656534954407294, 'Spending_Score': 0.0, 'Family_Size': 2.103343465045593, 'Var_1': 4.382978723404255, 'Hierarchical_Cluster': 1.1367781155015197, 'DBSCAN_Cluster': -0.0121580547112462, 'GMM_Cluster': 1.115501519756839}
+
+Cluster 2:
+Average Profile: {'ID': 463484.0695488722, 'Gender': 0.5657894736842105, 'Ever_Married': 0.19360902255639098, 'Age': 27.201127819548873, 'Graduated': 0.32894736842105265, 'Profession': 5.206766917293233, 'Work_Experience': 2.780075187969925, 'Spending_Score': 0.0, 'Family_Size': 3.642857142857143, 'Var_1': 3.904135338345865, 'Hierarchical_Cluster': 2.8815789473684212, 'DBSCAN_Cluster': -0.009398496240601503, 'GMM_Cluster': 2.0977443609022557}
+
+Cluster 3:
+Average Profile: {'ID': 463581.15204678365, 'Gender': 0.597953216374269, 'Ever_Married': 0.7149122807017544, 'Age': 44.666666666666664, 'Graduated': 0.5628654970760234, 'Profession': 2.871345029239766, 'Work_Experience': 2.3771929824561404, 'Spending_Score': 0.0, 'Family_Size': 2.8421052631578947, 'Var_1': 4.076023391812866, 'Hierarchical_Cluster': 1.909356725146199, 'DBSCAN_Cluster': -0.0029239766081871343, 'GMM_Cluster': 3.0}
+
+
+# Business strategies
+ 
+ Cluster Profiles (KMeans):
+                  Age  Work_Experience  Family_Size  Gender  Ever_Married  \
+KMeans_Cluster                                                              
+0               44.37             2.44         2.55    0.51          0.65   
+1               65.76             1.67         2.10    0.48          0.83   
+2               27.20             2.78         3.64    0.57          0.19   
+3               44.67             2.38         2.84    0.60          0.71   
+
+                Graduated  Profession  Spending_Score  
+KMeans_Cluster                                         
+0                    0.81        0.22             0.0  
+1                    0.57        7.18             0.0  
+2                    0.33        5.21             0.0  
+3                    0.56        2.87             0.0  
+
+ Cluster Insights & Strategies:
+
+Cluster 0 — Young Low Spenders
+Average Profile:
+Age                44.37
+Work_Experience     2.44
+Family_Size         2.55
+Gender              0.51
+Ever_Married        0.65
+Graduated           0.81
+Profession          0.22
+Spending_Score      0.00
+Name: 0, dtype: float64
+Strategy: Budget offers, loyalty rewards, student discounts
+
+Cluster 1 — Experienced High Spenders
+Average Profile:
+Age                65.76
+Work_Experience     1.67
+Family_Size         2.10
+Gender              0.48
+Ever_Married        0.83
+Graduated           0.57
+Profession          7.18
+Spending_Score      0.00
+Name: 1, dtype: float64
+Strategy: Premium offers, exclusive events, loyalty programs
+
+Cluster 2 — Middle-aged Average Spenders
+Average Profile:
+Age                27.20
+Work_Experience     2.78
+Family_Size         3.64
+Gender              0.57
+Ever_Married        0.19
+Graduated           0.33
+Profession          5.21
+Spending_Score      0.00
+Name: 2, dtype: float64
+Strategy: Family packages, seasonal promotions
+
+Cluster 3 — Young Professionals
+Average Profile:
+Age                44.67
+Work_Experience     2.38
+Family_Size         2.84
+Gender              0.60
+Ever_Married        0.71
+Graduated           0.56
+Profession          2.87
+Spending_Score      0.00
+Name: 3, dtype: float64
+Strategy: Targeted social media campaigns, starter bundles
+
